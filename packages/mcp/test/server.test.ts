@@ -14,14 +14,14 @@ async function connect(fake: any) {
 }
 const METHODS = ['search', 'productDetails', 'productReviews', 'bestSellers', 'sellerProducts', 'productLookup', 'productOffers',
   'deals', 'sellerProfile', 'categories', 'searchAutocomplete', 'productsByCategory', 'sellerReviews', 'influencerProfile',
-  'influencerPosts', 'promoCodeDetails'];
+  'influencerPosts', 'influencerPostProducts', 'promoCodeDetails'];
 const fake = (): any => Object.fromEntries(METHODS.map(m => [m, vi.fn()]));
 
 describe('mcp server', () => {
-  it('lists the 16 tools', async () => {
+  it('lists the 17 tools', async () => {
     const c = await connect(fake());
     expect((await c.listTools()).tools.map(t => t.name).sort()).toEqual([
-      'get_best_sellers', 'get_categories', 'get_category_products', 'get_deals', 'get_influencer_posts', 'get_influencer_profile',
+      'get_best_sellers', 'get_categories', 'get_category_products', 'get_deals', 'get_influencer_list_products', 'get_influencer_posts', 'get_influencer_profile',
       'get_offers', 'get_product', 'get_promotion', 'get_reviews', 'get_seller_products', 'get_seller_profile', 'get_seller_reviews',
       'lookup_product', 'search_autocomplete', 'search_products',
     ]);
@@ -35,6 +35,10 @@ describe('mcp server', () => {
     ['get_influencer_profile', 'influencerProfile', { handle: 'deliciousencounters' }],
     ['get_influencer_posts', 'influencerPosts', { handle: 'rodrick', country: 'US' }],
     ['get_promotion', 'promoCodeDetails', { promo_id: 'A2BCF666XZ7UFF', country: 'CA' }],
+    ['get_influencer_list_products', 'influencerPostProducts', { handle: 'madison.lecroy', post_id: 'amzn1.ideas.382NVFBNK3GGQ' }],
+    ['get_seller_reviews', 'sellerReviews', { seller_id: 'A2L77EE7U53NWQ', star_rating: 1 }],
+    ['get_deals', 'deals', { department: '15690151', min_discount: 40, prime_exclusive: true }],
+    ['search_products', 'search', { query: 'usb c cable', brand: 'Anker', filters: 'p_72:1248879011' }],
   ])('%s calls client.%s', async (tool, method, args) => {
     const f = fake(); f[method].mockResolvedValue({ data: { ok: 1 }, meta: {} });
     const r: any = await (await connect(f)).callTool({ name: tool, arguments: args });

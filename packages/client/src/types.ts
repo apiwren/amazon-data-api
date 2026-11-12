@@ -255,7 +255,9 @@ export interface Deal {
   ends_at: string | null;
   url: string;
 }
-export interface DealsData { page: number; deals: Deal[] }
+export interface DealRefinement { id: 'departments' | 'brands' | string; name: string; options: { name: string; value: string }[] }
+export interface DealsData { page: number; refinements: DealRefinement[]; deals: Deal[] }
+export type OfferCondition = 'new' | 'used' | 'used_like_new' | 'used_very_good' | 'used_good' | 'used_acceptable';
 
 export interface SellerProfile {
   seller_id: string;
@@ -313,6 +315,9 @@ export interface InfluencerPost {
   products: string[];
 }
 export interface InfluencerPostsData { handle: string; name: string; posts: InfluencerPost[] }
+
+export interface InfluencerListItem { asin: string; brand: string | null; title: string | null; image: string | null; price: number | null; currency: string; url: string }
+export interface InfluencerPostProductsData { handle: string; post_id: string; title: string | null; total_items: number | null; products: InfluencerListItem[] }
 
 export interface PromoDetails {
   promo_id: string;

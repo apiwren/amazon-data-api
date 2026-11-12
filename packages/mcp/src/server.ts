@@ -7,6 +7,8 @@ const country = z.enum(['US','CA','MX','BR','GB','DE','FR','IT','ES','NL','SE','
 const sort = z.enum(['relevance','price_asc','price_desc','reviews','newest','bestsellers']).optional();
 const page = z.number().int().min(1).max(20).optional();
 const sellerId = z.string().regex(/^[A-Za-z0-9]{10,16}$/).describe('Amazon seller ID, e.g. A2L77EE7U53NWQ (the seller= value in seller links).');
+const brand = z.string().max(320).optional().describe('Only these brands, by name, comma-separated (e.g. Anker,Belkin).');
+const filters = z.string().max(1100).optional().describe('Comma-separated values from a previous response\'s refinements (Prime, 4 stars and up, condition, deal type). They differ by marketplace.');
 const asin = z.string().regex(/^[A-Za-z0-9]{10}$/).describe('10-character Amazon product ID (ASIN).');
 
 async function run(fn: () => Promise<{ data: unknown }>) {
@@ -19,7 +21,7 @@ async function run(fn: () => Promise<{ data: unknown }>) {
 }
 
 export function createServer(client: AmazonData): McpServer {
-  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.4.2' });
+  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.5.0' });
   server.registerTool('search_products', {
     description: 'Search products',
     inputSchema: {
@@ -30,6 +32,9 @@ export function createServer(client: AmazonData): McpServer {
       min_price: z.number().min(0).optional().describe("In the marketplace's currency."),
       max_price: z.number().min(0).optional(),
       category: z.string().optional().describe('Amazon search category alias (e.g. electronics) or numeric browse node ID (e.g. 172541).'),
+      brand,
+      seller_id: sellerId.optional().describe('Only products sold by this third-party seller.'),
+      filters,
     },
   }, (p) => run(() => client.search(p)));
   server.registerTool('get_product', {
@@ -62,11 +67,23 @@ export function createServer(client: AmazonData): McpServer {
   }, (p) => run(() => client.productLookup(p)));
   server.registerTool('get_offers', {
     description: 'All seller offers for a product: price, condition, seller rating, FBA, Prime, delivery',
-    inputSchema: { asin, country, page },
+    inputSchema: {
+      asin, country, page,
+      condition: z.string().optional().describe('Comma-separated: new, used, used_like_new, used_very_good, used_good, used_acceptable.'),
+      prime: z.boolean().optional().describe('true for Prime-eligible offers only.'),
+    },
   }, (p) => run(() => client.productOffers(p)));
   server.registerTool('get_deals', {
-    description: "Today's deals on the marketplace's deals page",
-    inputSchema: { country },
+    description: "Today's deals on the marketplace's deals page, with optional filters",
+    inputSchema: {
+      country,
+      department: z.string().regex(/^\d{1,15}$/).optional().describe('A departments value from refinements in a previous response.'),
+      brand: z.string().optional().describe('A brands value from refinements, e.g. 200611|Ring.'),
+      price_range: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional().describe("Amazon's price bucket, 1 (lowest) to 5."),
+      min_discount: z.number().int().min(1).max(99).optional().describe('At least this percent off.'),
+      four_stars_and_up: z.boolean().optional(),
+      prime_exclusive: z.boolean().optional(),
+    },
   }, (p) => run(() => client.deals(p)));
   server.registerTool('get_seller_profile', {
     description: 'Seller profile: business name and address, rating, feedback counts and star breakdown',
@@ -77,6 +94,7 @@ export function createServer(client: AmazonData): McpServer {
     inputSchema: {
       seller_id: sellerId,
       cursor: z.string().optional().describe('next_cursor from the previous call, for older feedback. Omit for the newest page.'),
+      star_rating: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional().describe('Only feedback with this rating, last 12 months.'),
       country,
     },
   }, (p) => run(() => client.sellerReviews(p)));
@@ -89,6 +107,14 @@ export function createServer(client: AmazonData): McpServer {
     description: "An Amazon influencer's newest video posts, with the ASINs each one features",
     inputSchema: { handle, country },
   }, (p) => run(() => client.influencerPosts(p)));
+  server.registerTool('get_influencer_list_products', {
+    description: "The products in an Amazon influencer's list post (US): title, item count, first ~20 products",
+    inputSchema: {
+      handle,
+      post_id: z.string().regex(/^(amzn1\.ideas\.)?[A-Za-z0-9]{8,20}$/).describe('List post ID, e.g. amzn1.ideas.382NVFBNK3GGQ.'),
+      country,
+    },
+  }, (p) => run(() => client.influencerPostProducts(p)));
   server.registerTool('get_promotion', {
     description: 'An Amazon promotion by ID: title, schedule, how to claim, the seller running it',
     inputSchema: {
@@ -114,6 +140,8 @@ export function createServer(client: AmazonData): McpServer {
       country,
       page,
       sort,
+      brand,
+      filters,
     },
   }, (p) => run(() => client.productsByCategory(p)));
   return server;

@@ -1,6 +1,6 @@
 import type {
   AutocompleteData, BestSellersData, CategoriesData, CategoryProductsData, Country, DealsData, Envelope, ListType,
-  InfluencerPostsData, InfluencerProfile, LookupData, OffersData, Product, PromoDetails, RawPage, Reviews, SearchData,
+  InfluencerPostProductsData, InfluencerPostsData, InfluencerProfile, OfferCondition, LookupData, OffersData, Product, PromoDetails, RawPage, Reviews, SearchData,
   SellerProductsData, SellerProfile, SellerReviewsData, Sort,
 } from './types.js';
 export * from './types.js';
@@ -24,7 +24,11 @@ export class AmazonData {
     this.fetchFn = opts.fetch ?? globalThis.fetch;
   }
 
-  search(p: { query: string; country?: Country; page?: number; sort?: Sort; min_price?: number; max_price?: number; category?: string }) {
+  /**
+   * `brand`: brand names, comma-separated. `filters`: comma-separated `value`s from a previous response's `refinements`
+   * (Prime, 4 stars and up, condition, deal type); they differ by marketplace.
+   */
+  search(p: { query: string; country?: Country; page?: number; sort?: Sort; min_price?: number; max_price?: number; category?: string; brand?: string; seller_id?: string; filters?: string }) {
     return this.get<SearchData>('search', p);
   }
   productDetails(p: { asin: string; country?: Country }) {
@@ -43,17 +47,19 @@ export class AmazonData {
   productLookup(p: { identifier: string; country?: Country }) {
     return this.get<LookupData>('product-lookup', p);
   }
-  productOffers(p: { asin: string; country?: Country; page?: number }) {
+  /** `condition`: comma-separated OfferCondition values. */
+  productOffers(p: { asin: string; country?: Country; page?: number; condition?: OfferCondition | string; prime?: boolean }) {
     return this.get<OffersData>('product-offers', p);
   }
-  deals(p: { country?: Country; page?: 1 } = {}) {
+  /** `department` and `brand` take a `value` from the response's `refinements`. */
+  deals(p: { country?: Country; page?: 1; department?: string; brand?: string; price_range?: 1 | 2 | 3 | 4 | 5; min_discount?: number; four_stars_and_up?: boolean; prime_exclusive?: boolean } = {}) {
     return this.get<DealsData>('deals', p);
   }
   sellerProfile(p: { seller_id: string; country?: Country }) {
     return this.get<SellerProfile>('seller-profile', p);
   }
   /** Newest feedback first; pass the previous response's next_cursor as `cursor` for older pages. */
-  sellerReviews(p: { seller_id: string; cursor?: string; country?: Country }) {
+  sellerReviews(p: { seller_id: string; cursor?: string; star_rating?: 1 | 2 | 3 | 4 | 5; country?: Country }) {
     return this.get<SellerReviewsData>('seller-reviews', p);
   }
   /** `handle` is the name in amazon.com/shop/<handle>. */
@@ -63,6 +69,10 @@ export class AmazonData {
   /** The newest video posts (up to 10), each with the ASINs it features. */
   influencerPosts(p: { handle: string; country?: Country }) {
     return this.get<InfluencerPostsData>('influencer-posts', p);
+  }
+  /** The products in a "List" post: title, item count and the first page (about 20). `post_id` as in amzn1.ideas.<id>. US only. */
+  influencerPostProducts(p: { handle: string; post_id: string; country?: Country }) {
+    return this.get<InfluencerPostProductsData>('influencer-post-products', p);
   }
   /** `promo_id` is the ID in an amazon.com/promotion/psp/<promo_id> link. */
   promoCodeDetails(p: { promo_id: string; country?: Country }) {
@@ -79,7 +89,7 @@ export class AmazonData {
   searchAutocomplete(p: { query: string; country?: Country }) {
     return this.get<AutocompleteData>('search-autocomplete', p);
   }
-  productsByCategory(p: { category: string; country?: Country; page?: number; sort?: Sort }) {
+  productsByCategory(p: { category: string; country?: Country; page?: number; sort?: Sort; brand?: string; filters?: string }) {
     return this.get<CategoryProductsData>('products-by-category', p);
   }
 
