@@ -3,7 +3,7 @@
   "name": "io.github.terrelllouis056-gi/amazon-data-api",
   "description": "Amazon search, products, reviews, offers, sellers, deals, promos, influencers: 23 marketplaces.",
   "websiteUrl": "https://apiwren.com/mcp",
-  "repository": { "url": "https://github.com/terrelllouis056-gi/amazon-data-api", "source": "github", "subfolder": "packages/mcp" },
+  "repository": { "url": "https://github.com/apiwren/amazon-data-api", "source": "github", "subfolder": "packages/mcp" },
   "version": "0.5.0",
   "packages": [
     {

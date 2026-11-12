@@ -34,11 +34,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/terrelllouis056-gi/amazon-data-api.git",
+    "url": "git+https://github.com/apiwren/amazon-data-api.git",
     "directory": "packages/mcp"
   },
   "homepage": "https://apiwren.com/mcp",
   "bugs": {
-    "url": "https://github.com/terrelllouis056-gi/amazon-data-api/issues"
+    "url": "https://github.com/apiwren/amazon-data-api/issues"
   }
 }
