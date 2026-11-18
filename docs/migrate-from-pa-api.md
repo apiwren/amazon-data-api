@@ -78,4 +78,4 @@ for (const r of data.results) console.log(r.asin, r.title, r.price);
 
 - Data is read from Amazon pages at request time, so a fresh call takes 3 to 6 seconds. The client has no timeout option; to wait at least 60 seconds, pass a custom `fetch`: `new AmazonData({ apiKey, fetch: (u, i) => fetch(u, { ...i, signal: AbortSignal.timeout(60_000) }) })`. Results are cached for 10 minutes (1 hour for best sellers).
 - Authentication is one RapidAPI key, not signed requests or Associates credentials.
-- Plans are hard limits: free 100 requests a month, Pro $15/month for 15,000. [Try it free](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers).
+- The free Basic plan has a hard limit of 100 requests a month. Pro is $15/month for 15,000 included requests; paid plans charge per-request overages beyond their quota. See [current pricing and overage rates](https://apiwren.com/pricing). [Try it free](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers).

@@ -135,7 +135,7 @@ See the [PA-API migration guide](docs/migrate-from-pa-api.md): field mapping, be
 
 ## FAQ
 
-**Is it free?** The free plan on RapidAPI is 100 requests a month. RapidAPI asks for a card even on free plans. Pro is $15/month for 15,000 requests. Plans are hard limits.
+**Is it free?** The free plan on RapidAPI is 100 requests a month. RapidAPI asks for a card even on free plans. Pro is $15/month for 15,000 requests. The free Basic plan stops at its 100-request monthly quota; paid plans charge per-request overages beyond their included quota. See [current pricing and overage rates](https://apiwren.com/pricing).
 
 **Why is `top_reviews` empty for US?** Amazon shows no review text to logged-out visitors on amazon.com, so `top_reviews` is always `[]` for `US`. The rating, star breakdown, summary and topic tags are still returned. Other marketplaces usually return 5 to 13 reviews. Full review lists need an Amazon login and are not available.
 
