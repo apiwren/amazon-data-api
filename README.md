@@ -4,7 +4,7 @@ Amazon product data for 23 marketplaces, without the PA-API 5 shutdown and witho
 
 > Earning Amazon Associates commissions? Check your Associates agreement before using any non-Amazon data source.
 
-**[Try it free on RapidAPI](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers)** (free plan: 100 requests a month)
+**[Try it free on RapidAPI](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers)** (free plan: 100 requests a month)
 
 Every endpoint, with parameters and a recorded response: [apiwren.com/amazon-product-api](https://apiwren.com/amazon-product-api). Is PA-API gone for you? See [Amazon PA-API alternatives after PA-API 5](https://apiwren.com/guides/amazon-pa-api-alternative).
 
@@ -64,7 +64,7 @@ The full response also has `description` and a `product_details` table. Fields A
 | `GET /influencer-post-products` | `influencerPostProducts` | `get_influencer_list_products` | the products in an influencer's list post (US) |
 | `GET /scrape-url` | `scrapeUrl` | (none: multi-MB HTML) | the raw HTML of any page on the 23 Amazon marketplaces |
 
-A few endpoints are not available in every marketplace (for example `/search-autocomplete` in IN). The [RapidAPI docs](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers) have the full endpoint × marketplace table; an unavailable pair returns `country_unavailable`.
+A few endpoints are not available in every marketplace (for example `/search-autocomplete` in IN). The [RapidAPI docs](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers) have the full endpoint × marketplace table; an unavailable pair returns `country_unavailable`.
 
 ## Marketplaces
 
@@ -85,7 +85,7 @@ The United Kingdom is `GB`, not `UK`.
 
 ## Quickstart: JavaScript / TypeScript
 
-Subscribe on [RapidAPI](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers) and copy your key. Needs Node 18+ (or Deno, Bun, a browser, Workers). No runtime dependencies.
+Subscribe on [RapidAPI](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers) and copy your key. Needs Node 18+ (or Deno, Bun, a browser, Workers). No runtime dependencies.
 
 ```sh
 npm install amazon-data-api
@@ -135,7 +135,7 @@ See the [PA-API migration guide](docs/migrate-from-pa-api.md): field mapping, be
 
 ## FAQ
 
-**Is it free?** The free plan on RapidAPI is 100 requests a month. RapidAPI asks for a card even on free plans. Pro is $15/month for 15,000 requests. Plans are hard limits.
+**Is it free?** The free plan on RapidAPI is 100 requests a month. RapidAPI asks for a card even on free plans. Pro is $15/month for 15,000 requests. The free Basic plan stops at its 100-request monthly quota; paid plans charge per-request overages beyond their included quota. See [current pricing and overage rates](https://apiwren.com/pricing).
 
 **Why is `top_reviews` empty for US?** Amazon shows no review text to logged-out visitors on amazon.com, so `top_reviews` is always `[]` for `US`. The rating, star breakdown, summary and topic tags are still returned. Other marketplaces usually return 5 to 13 reviews. Full review lists need an Amazon login and are not available.
 
@@ -147,7 +147,7 @@ See the [PA-API migration guide](docs/migrate-from-pa-api.md): field mapping, be
 
 ## Support
 
-Questions and bug reports: the Discussions tab on the [RapidAPI listing](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers).
+Questions and bug reports: the Discussions tab on the [RapidAPI listing](https://rapidapi.com/apiwren-apiwren-default/api/amazon-data-api-search-product-reviews-best-sellers).
 
 ## Licence
 
