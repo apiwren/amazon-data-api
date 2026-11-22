@@ -4,7 +4,7 @@ MCP server for the [Amazon Data API](https://rapidapi.com/terrelllouis056/api/am
 
 > Earning Amazon Associates commissions? Check your Associates agreement before using any non-Amazon data source.
 
-Tools: `search_products`, `get_product`, `get_reviews`, `get_best_sellers`, `get_category_products`, `lookup_product`, `get_offers`, `get_seller_products`, `get_seller_profile`, `get_deals`, `get_categories`, `search_autocomplete`, `get_seller_reviews`, `get_promotion`, `get_influencer_profile`, `get_influencer_posts`, `get_influencer_list_products`. Set `RAPIDAPI_KEY` (free plan: 100 requests a month; get a key on [RapidAPI](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers)).
+Tools: `search_products`, `get_product`, `get_reviews`, `get_best_sellers`, `get_category_products`, `lookup_product`, `get_offers`, `get_seller_products`, `get_seller_profile`, `get_deals`, `get_categories`, `search_autocomplete`, `get_seller_reviews`, `get_promotion`, `get_influencer_profile`, `get_influencer_posts`, `get_influencer_list_products`. Tool descriptions name the response fields an agent can rely on, for example `is_prime` and `savings_percent` on search results, `deal.ends_at` on products and `total_offers_with_featured` on offers. Set `RAPIDAPI_KEY` (free plan: 100 requests a month; get a key on [RapidAPI](https://rapidapi.com/terrelllouis056/api/amazon-data-api-search-product-reviews-best-sellers)).
 
 Claude Desktop (`claude_desktop_config.json`):
 

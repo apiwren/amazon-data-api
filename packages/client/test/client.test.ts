@@ -1,5 +1,6 @@
-import { describe, expect, it, test, vi } from 'vitest';
+import { describe, expect, expectTypeOf, it, test, vi } from 'vitest';
 import { AmazonData, AmazonDataError } from '../src/index.js';
+import type { OffersData, Product, SearchResult } from '../src/types.js';
 
 const HOST = 'amazon-data-api-search-product-reviews-best-sellers.p.rapidapi.com';
 const reply = (status: number, body: string) =>
@@ -85,4 +86,11 @@ it('calls fetch unbound (no Illegal invocation with globalThis.fetch)', async ()
     return Promise.resolve(new Response('{}', { status: 200 }));
   };
   await expect(new AmazonData({ apiKey: 'k', fetch: f as any }).search({ query: 'x' })).resolves.toEqual({});
+});
+
+it('types deal.ends_at, total_offers_with_featured, is_prime and savings_percent', () => {
+  expectTypeOf<OffersData['total_offers_with_featured']>().toEqualTypeOf<number | null>();
+  expectTypeOf<NonNullable<Product['deal']>>().toEqualTypeOf<{ badge: string; ends_in: string | null; ends_at: string | null }>();
+  expectTypeOf<SearchResult['is_prime']>().toEqualTypeOf<boolean | null>();
+  expectTypeOf<SearchResult['savings_percent']>().toEqualTypeOf<number | null>();
 });

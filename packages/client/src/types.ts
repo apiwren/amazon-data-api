@@ -18,6 +18,7 @@ export interface SearchResult {
   currency: string;
   rating: number | null;
   total_ratings: number | null;
+  /** true for a Prime badge or, on amazon.com, the "Join Prime to get FREE delivery" line; false on amazon.com when the delivery line lacks it; null when unknown. */
   is_prime: boolean | null;
   is_sponsored: boolean;
   is_amazon_choice: boolean;
@@ -38,6 +39,7 @@ export interface SearchResult {
   series: string | null;
   unit_price: UnitPrice | null;
   original_price_type: string | null;
+  /** Amazon's discount badge; without one, computed from `price` and `original_price` (1 to 99). */
   savings_percent: number | null;
   coupon: string | null;
   promotions: string[];
@@ -84,6 +86,7 @@ export interface Product {
   description: string | null;
   product_details: Record<string, string>;
   categories: string[];
+  /** `[]` for Amazon's own devices (Echo, Fire TV, Kindle), whose pages show no rank. */
   best_sellers_rank: { rank: number; category: string | null; node_id: string | null; url: string | null }[];
   sales_volume: string | null;
   has_variations: boolean;
@@ -129,7 +132,8 @@ export interface Product {
   // promo
   coupon: string | null;
   promotions: string[];
-  deal: { badge: string; ends_in: string | null } | null;
+  /** `ends_in` is Amazon's countdown text; `ends_at` its end time (ISO 8601 UTC), null when the countdown is not hours:minutes:seconds. */
+  deal: { badge: string; ends_in: string | null; ends_at: string | null } | null;
   badges: string[];
   delivery: { text: string | null; date: string | null; price: string | null; fastest_text: string | null; cutoff: string | null; location: string | null } | null;
   payment_options: string[];
@@ -205,6 +209,7 @@ export interface Reviews {
   top_reviews: Review[];
 }
 
+/** Every item carries details; if Amazon's second request for ranks after 30 fails, those items have only `rank`, `asin` and `url`. */
 export interface BestSellerItem {
   rank: number;
   asin: string;
@@ -239,7 +244,8 @@ export interface Offer {
   is_prime: boolean | null;
   delivery: string | null;
 }
-export interface OffersData { asin: string; page: number; total_offers: number | null; offers: Offer[] }
+/** `total_offers` counts offers besides the featured one; `total_offers_with_featured` includes it. Both null after page 1. */
+export interface OffersData { asin: string; page: number; total_offers: number | null; total_offers_with_featured: number | null; offers: Offer[] }
 
 export interface Deal {
   deal_id: string | null;

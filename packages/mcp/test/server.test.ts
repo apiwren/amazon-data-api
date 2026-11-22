@@ -27,6 +27,16 @@ describe('mcp server', () => {
     ]);
   });
   it.each([
+    ['search_products', ['is_prime', 'Join Prime', 'savings_percent']],
+    ['get_product', ['deal', 'ends_at', 'best_sellers_rank']],
+    ['get_best_sellers', ['50 ranks', 'first 30']],
+    ['get_offers', ['total_offers_with_featured']],
+    ['get_deals', ['deal.ends_at']],
+  ])('%s describes its response fields', async (tool, words) => {
+    const t = (await (await connect(fake())).listTools()).tools.find(t => t.name === tool)!;
+    for (const w of words) expect(t.description).toContain(w);
+  });
+  it.each([
     ['get_offers', 'productOffers', { asin: 'B088NRLMPV', page: 2 }],
     ['lookup_product', 'productLookup', { identifier: '0885909950805' }],
     ['get_seller_profile', 'sellerProfile', { seller_id: 'A2L77EE7U53NWQ' }],
