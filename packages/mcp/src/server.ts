@@ -21,7 +21,7 @@ async function run(fn: () => Promise<{ data: unknown }>) {
 }
 
 export function createServer(client: AmazonData): McpServer {
-  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.6.0' });
+  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.6.1' });
   server.registerTool('search_products', {
     description: 'Search products. Each result has price, list price, savings_percent (Amazon\'s badge, or computed from price and list price), rating, sponsored and badge flags, and is_prime: true for a Prime badge or, on amazon.com, the "Join Prime to get FREE delivery" line; false on amazon.com when the delivery line lacks it; null when unknown.',
     inputSchema: {
