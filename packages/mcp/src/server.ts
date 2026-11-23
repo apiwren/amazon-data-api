@@ -21,9 +21,9 @@ async function run(fn: () => Promise<{ data: unknown }>) {
 }
 
 export function createServer(client: AmazonData): McpServer {
-  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.5.0' });
+  const server = new McpServer({ name: 'amazon-data-api-mcp', version: '0.6.1' });
   server.registerTool('search_products', {
-    description: 'Search products',
+    description: 'Search products. Each result has price, list price, savings_percent (Amazon\'s badge, or computed from price and list price), rating, sponsored and badge flags, and is_prime: true for a Prime badge or, on amazon.com, the "Join Prime to get FREE delivery" line; false on amazon.com when the delivery line lacks it; null when unknown.',
     inputSchema: {
       query: z.string().min(1).max(200).describe('Search keywords.'),
       country,
@@ -38,7 +38,7 @@ export function createServer(client: AmazonData): McpServer {
     },
   }, (p) => run(() => client.search(p)));
   server.registerTool('get_product', {
-    description: 'Product details by ASIN',
+    description: 'Product details by ASIN: price, images, rating, availability, details table, best_sellers_rank ([] only for Amazon\'s own devices), is_prime, and deal { badge, ends_in, ends_at } where ends_at is the deal\'s end time (ISO 8601 UTC) from Amazon\'s countdown, or null.',
     inputSchema: { asin, country },
   }, (p) => run(() => client.productDetails(p)));
   server.registerTool('get_reviews', {
@@ -46,7 +46,7 @@ export function createServer(client: AmazonData): McpServer {
     inputSchema: { asin, country },
   }, (p) => run(() => client.productReviews(p)));
   server.registerTool('get_best_sellers', {
-    description: 'Best sellers and rankings',
+    description: 'Best sellers and rankings: 50 ranks per page, each with title, price, rating and image. If Amazon\'s second request fails, items after the first 30 have only rank, ASIN and URL.',
     inputSchema: {
       category: z.string().describe("Category slug as in Amazon's best-seller URLs, optionally with a node ID, e.g. electronics."),
       type: z.enum(['bestsellers','new-releases','movers-and-shakers','most-wished-for','gift-ideas']).optional(),
@@ -66,7 +66,7 @@ export function createServer(client: AmazonData): McpServer {
     },
   }, (p) => run(() => client.productLookup(p)));
   server.registerTool('get_offers', {
-    description: 'All seller offers for a product: price, condition, seller rating, FBA, Prime, delivery',
+    description: 'All seller offers for a product: price, condition, seller rating, FBA, Prime, delivery. The featured offer comes first. total_offers counts offers besides the featured one; total_offers_with_featured includes it (both null after page 1).',
     inputSchema: {
       asin, country, page,
       condition: z.string().optional().describe('Comma-separated: new, used, used_like_new, used_very_good, used_good, used_acceptable.'),
@@ -74,7 +74,7 @@ export function createServer(client: AmazonData): McpServer {
     },
   }, (p) => run(() => client.productOffers(p)));
   server.registerTool('get_deals', {
-    description: "Today's deals on the marketplace's deals page, with optional filters",
+    description: "Today's deals on the marketplace's deals page, with optional filters. ends_at is usually null here; get_product returns a deal's end time as deal.ends_at.",
     inputSchema: {
       country,
       department: z.string().regex(/^\d{1,15}$/).optional().describe('A departments value from refinements in a previous response.'),

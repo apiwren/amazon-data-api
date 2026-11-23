@@ -27,14 +27,14 @@ The Associates Program policies currently say Product Advertising Content may be
 | `ItemInfo.Features` | `about` | bullet points |
 | `ItemInfo.ProductInfo`, `ItemInfo.TechnicalInfo`, `ItemInfo.ManufactureInfo` | `product_details` | one label to value table; labels are in the marketplace's language |
 | `Offers.Listings.Price` | `price`, `currency` | numbers, not formatted strings |
-| `Offers.Listings.SavingBasis` | `original_price` | the struck-through list price |
+| `Offers.Listings.SavingBasis` | `original_price` | the struck-through list price; `savings_percent` is the discount |
 | `Offers.Listings.Availability` | `availability` | Amazon's text, e.g. "In Stock" |
-| `Offers.Listings.DeliveryInfo.IsPrimeEligible` | `is_prime` | |
+| `Offers.Listings.DeliveryInfo.IsPrimeEligible` | `is_prime` | `true` for a Prime badge or, on amazon.com, the "Join Prime to get FREE delivery" line; `null` when unknown |
 | `Images.Primary`, `Images.Variants` | `images` | full-size URLs, one list |
 | `CustomerReviews.StarRating` | `rating` | |
 | `CustomerReviews.Count` | `total_ratings` | |
 | `BrowseNodeInfo.BrowseNodes` | `categories` | names only, no node IDs |
-| `BrowseNodeInfo.WebsiteSalesRank` | `best_sellers_rank` | `{ rank, category }[]` |
+| `BrowseNodeInfo.WebsiteSalesRank` | `best_sellers_rank` | `{ rank, category, node_id, url }[]`; `[]` for Amazon's own devices, whose pages show no rank |
 | `ParentASIN`, `VariationSummary` | `has_variations` | a flag only; no variation list |
 | `SearchItems` (`Keywords`, `SearchIndex`, `ItemPage`, `SortBy`, `MinPrice`, `MaxPrice`) | `/search` (`query`, `category`, `page`, `sort`, `min_price`, `max_price`) | `MinPrice`/`MaxPrice` are in the lowest currency unit (cents); ours are plain numbers in the marketplace's currency. Results carry `asin`, `title`, `price`, `rating`, `image` and flags; `has_next_page` replaces `SearchResult.TotalResultCount` |
 | `GetBrowseNodes` | `/best-sellers` (by category slug) | ranked lists, not the browse-node tree |

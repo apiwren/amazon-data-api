@@ -39,19 +39,19 @@ Every endpoint, with parameters and a recorded response: [apiwren.com/amazon-pro
 }
 ```
 
-The full response also has `description` and a `product_details` table. Fields Amazon does not show for a product are `null` (or `[]`).
+The full response also has `description`, a `product_details` table and `deal` (`{ badge, ends_in, ends_at }` when the product is on a deal, `ends_at` in ISO 8601 UTC). Fields Amazon does not show for a product are `null` (or `[]`); `best_sellers_rank` is `[]` only for Amazon's own devices (Echo, Fire TV, Kindle), whose pages show no rank.
 
 ## Endpoints
 
 | Endpoint | Client method | MCP tool | Returns |
 |---|---|---|---|
-| `GET /search` | `search` | `search_products` | keyword search with page, sort, price range and category |
-| `GET /product-details` | `productDetails` | `get_product` | one product by ASIN: title, price, images, rating, availability, details table, rank |
+| `GET /search` | `search` | `search_products` | keyword search with page, sort, price range and category; each result has `is_prime` and `savings_percent` |
+| `GET /product-details` | `productDetails` | `get_product` | one product by ASIN: title, price, images, rating, availability, details table, Best Sellers Rank, deal with its end time |
 | `GET /product-reviews` | `productReviews` | `get_reviews` | rating, star breakdown, Amazon's "Customers say" summary, topic tags |
-| `GET /best-sellers` | `bestSellers` | `get_best_sellers` | Best Sellers, New Releases, Movers & Shakers, Most Wished For, Gift Ideas; ranks 1 to 100 |
+| `GET /best-sellers` | `bestSellers` | `get_best_sellers` | Best Sellers, New Releases, Movers & Shakers, Most Wished For, Gift Ideas; ranks 1 to 100, 50 per page, each with title, price and rating |
 | `GET /products-by-category` | `productsByCategory` | `get_category_products` | products in a category, no keyword needed |
 | `GET /product-lookup` | `productLookup` | `lookup_product` | find the product for a UPC, EAN, ISBN or GTIN barcode |
-| `GET /product-offers` | `productOffers` | `get_offers` | every seller's offer: price, condition, seller rating, FBA, Prime, delivery |
+| `GET /product-offers` | `productOffers` | `get_offers` | every seller's offer: price, condition, seller rating, FBA, Prime, delivery; offer count with and without the featured offer |
 | `GET /seller-products` | `sellerProducts` | `get_seller_products` | a third-party seller's storefront |
 | `GET /seller-profile` | `sellerProfile` | `get_seller_profile` | seller business name and address, rating, feedback counts, star breakdown |
 | `GET /seller-reviews` | `sellerReviews` | `get_seller_reviews` | a seller's buyer feedback, newest first, paged with a cursor |
@@ -68,7 +68,7 @@ A few endpoints are not available in every marketplace (for example `/search-aut
 
 ## Marketplaces
 
-Pass `country` as one of these codes (default `US`). Text comes back in the marketplace's language, prices in its currency.
+Pass `country` as one of these codes (default `US`). Prices come back in the marketplace's currency. Text is in the language Amazon serves by default, which is English on the European and Japanese sites.
 
 | Code | Marketplace | Code | Marketplace | Code | Marketplace |
 |---|---|---|---|---|---|
